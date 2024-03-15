@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>파일 정보 수정</title>
+<link href="/css/style.css" rel="stylesheet">
+ <style>
+        body {
+		    font-family: Arial, sans-serif;
+		    margin: 0;
+		    padding: 0;
+		    background-color: #f9f9f9;
+		}
+		
+		table {
+		    width: 80%;
+		    margin: 20px auto;
+		    border-collapse: collapse;
+		    background-color: #fff;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+		    margin-top: 100px;
+		}
+		
+		th, td {
+		    border: 1px solid #eee; 
+		    padding: 12px;
+		    text-align: left;
+		}
+		
+		th {
+		    background-color: aliceblue;
+		}
+		
+		th, td {
+		    text-align: center;
+		}
+		
+		button {
+		    padding: 8px 16px;
+		    background-color: #3498db; 
+		    color: white;
+		    border: none;
+		    cursor: pointer;
+		    border-radius: 20px; 
+		    transition: background-color 0.3s ease; 
+		}
+		
+		button:hover {
+		    background-color: #2980b9;
+		}
+		
+ 	    .modal {
+	        position: fixed;
+	        z-index: 1;
+	        left: 50%;
+	        top: 10%;
+	        transform: translate(-50%, -50%);
+	        max-width: calc(100% - 40px);
+	        max-height: calc(100% - 40px);
+	        overflow: auto;
+	        width: 240px;
+	        background-color: white;
+	        border: 1px solid #ccc;
+	        border-radius: 8px;
+	        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+	    }
+	
+	    .modal-content {
+	        padding: 20px;
+	    }
+	
+	    .close {
+	        float: right;
+	        cursor: pointer;
+	    }
+	
+	    /* 확인 및 취소 버튼 스타일 */
+	    .modal-content .btn-container {
+	        display: inline;
+	        justify-content: flex-end;
+	        margin-top: 20px;
+	    }
+	
+	    /* 확인 버튼 스타일 */
+	    .modal-content .btn-container button.confirm {
+	        padding: 8px 16px;
+	        margin-left: 10px;
+	        border: none;
+	        cursor: pointer;
+	        border-radius: 20px;
+	        transition: background-color 0.3s ease;
+	        background-color: #3498db;
+	        color: white;
+	    }
+	
+	    /* 취소 버튼 스타일 */
+	    .modal-content .btn-container button.cancel {
+	        padding: 8px 16px;
+	        border: none;
+	        cursor: pointer;
+	        border-radius: 20px;
+	        transition: background-color 0.3s ease;
+	        background-color: #aaa;
+	        color: white;
+	    }
+	
+	    /* 버튼 호버 스타일 */
+	    .modal-content .btn-container button:hover {
+	        opacity: 0.8;
+	    }
+        .file-image {
+            width: 200px;
+            height: 150px;
+            object-fit: cover;
+            
+        }
+    </style>
+</head>
+<body>
+	<div class="menubar">
+		<ul class="main_menu">
+			<li><a href="/board/list?page=1">홈으로</a></li>
+			<li><a href="">사용자통계</a>
+				<ul class="sub_menu">
+					<li><a href="/master/memberCount">전체 회원 숫자</a></li>
+					<li><a href="/master/numberPost">게시물 갯수</a></li>
+					<li><a href="/master/numberReply">댓글 갯수</a></li>
+				</ul>
+			</li>
+			<li><a href="">첨부파일</a>
+				<ul class="sub_menu">
+					<li><a href="/master/fileModify">첨부 파일 수정</a></li>
+					<li><a href="/master/fileDelete">첨부 파일 삭제</a></li>
+				</ul>
+			</li>
+			<li><a href="/master/boardManage">게시판관리</a></li>
+			<li><a href="/master/systemInfo">시스템정보</a></li>
+		</ul>
+	</div>
+   <table border="1">
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>유저 아이디</th>
+                <th>파일명</th>
+                 <th>파일 사진</th>
+                <th>삭제</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="file : ${fileList}">
+                <td th:text="${file.fileseqno}"></td>
+                <td th:text="${file.userid}"></td>
+                <td th:text="${file.org_filename}"></td>
+                <td><img th:src="@{'/file/'+${file.stored_filename}}" alt="file" class="file-image" /></td>
+                <td><button th:onclick="|openModal('myModal${file.fileseqno}')|">삭제</button></td>
+            </tr>
+        </tbody>
+    </table>
+    <div th:each="file: ${fileList}">
+        <div th:id="|myModal${file.fileseqno}|" class="modal" style="display: none;">
+            <div class="modal-content">
+				<span class="close" th:onclick="|closeModal('myModal${file.fileseqno}')|">&times;</span>
+				<p>정말 삭제하시겠습니까?</p>
+				<button th:onclick="|confirmDelete('${file.fileseqno}')|">확인</button>
+				<button th:onclick="|closeModal('myModal${file.fileseqno}')|">취소</button>
+            </div>
+        </div>
+    </div>
+
+ 	<script th:each="file : ${fileList}">
+        
+	    openModal = (modalId) => {
+	        const modal = document.getElementById(modalId);
+	        modal.style.display = 'inline';
+	    }
+        
+     	// 모달 창을 닫는 함수
+        closeModal = (modalId) => {
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'none';
+        }
+
+        // 삭제 확인 함수
+        confirmDelete = (modalId) => {
+        	document.location.href = '/master/fileModifyX?fileseqno='+modalId;
+            alert('파일 ' + modalId + '가 삭제되었습니다.');
+            closeModal('modalId');
+        }
+
+        // 삭제 버튼 클릭 시 해당 모달 창을 표시하는 함수
+        deleteOn = (modalId) => {
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

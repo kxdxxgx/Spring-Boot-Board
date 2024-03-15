@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>댓글 수</title>
+<link href="/css/style.css" rel="stylesheet">
+ <style>
+        body {
+		    font-family: Arial, sans-serif;
+		    margin: 0;
+		    padding: 0;
+		    background-color: #f9f9f9;
+		}
+		
+		table {
+		    width: 80%;
+		    margin: 20px auto;
+		    border-collapse: collapse;
+		    background-color: #fff;
+		    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+       	    margin-top: 100px;
+		}
+		
+		th, td {
+		    border: 1px solid #eee; 
+		    padding: 12px;
+		    text-align: left;
+		}
+		
+		th {
+		    background-color: aliceblue;
+		}
+		
+		th:first-child, td:first-child {
+		    text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div class="menubar">
+		<ul class="main_menu">
+			<li><a href="/board/list?page=1">홈으로</a></li>
+			<li><a href="">사용자통계</a>
+				<ul class="sub_menu">
+					<li><a href="/master/memberCount">전체 회원 숫자</a></li>
+					<li><a href="/master/numberPost">게시물 갯수</a></li>
+					<li><a href="/master/numberReply">댓글 갯수</a></li>
+				</ul>
+			</li>
+			<li><a href="">첨부파일</a>
+				<ul class="sub_menu">
+					<li><a href="/master/fileModify">첨부 파일 수정</a></li>
+					<li><a href="/master/fileDelete">첨부 파일 삭제</a></li>
+				</ul>
+			</li>
+			<li><a href="/master/boardManage">게시판관리</a></li>
+			<li><a href="/master/systemInfo">시스템정보</a></li>
+		</ul>
+	</div>
+   <table border="1">
+        <thead>
+            <tr>
+                <th>userid</th>
+                <th>username</th>
+                <th>Reply Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="reply : ${replyCount}">
+                <td th:text="${reply.userid}"></td>
+                <td th:text="${reply.username}"></td>
+                <td th:text="${reply.replycount}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

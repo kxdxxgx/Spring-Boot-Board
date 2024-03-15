@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>시스템 정보</title>
+    <link href="/css/style.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .info-content {
+            font-size: 24px; 
+            text-align: center;
+            margin: 15px 0; 
+            padding-bottom: 15px; 
+            border-bottom: 2px solid #ccc; 
+            color : dimgray;
+        }
+    </style>
+</head>
+<body>
+	<div class="menubar">
+		<ul class="main_menu">
+			<li><a href="/board/list?page=1">홈으로</a></li>
+			<li><a href="">사용자통계</a>
+				<ul class="sub_menu">
+					<li><a href="/master/memberCount">전체 회원 숫자</a></li>
+					<li><a href="/master/numberPost">게시물 갯수</a></li>
+					<li><a href="/master/numberReply">댓글 갯수</a></li>
+				</ul>
+			</li>
+			<li><a href="">첨부파일</a>
+				<ul class="sub_menu">
+					<li><a href="/master/fileModify">첨부 파일 수정</a></li>
+					<li><a href="/master/fileDelete">첨부 파일 삭제</a></li>
+				</ul>
+			</li>
+			<li><a href="/master/boardManage">게시판관리</a></li>
+			<li><a href="/master/systemInfo">시스템정보</a></li>
+		</ul>
+	</div>
+    <div class="info-content" th:text="'현재 서블릿 컨테이너의 정보 : ' + ${tomcat_apache}"></div>
+    <div class="info-content" th:text="'현재 웹 애플리케이션의 이름 : ' + ${current_application_name}"></div>
+    <div class="info-content" th:text="'현재 웹 애플리케이션이 실행 중인 가상 서버 : ' + ${virtual_server_name}"></div>
+    <div class="info-content" th:text="'데이터베이스 정보 : ' + ${database_Info}"></div>
+    <div class="info-content" th:text="'데이터베이스 버전 정보 : ' + ${database_VersionInfo}"></div>
+</body>
+</html>

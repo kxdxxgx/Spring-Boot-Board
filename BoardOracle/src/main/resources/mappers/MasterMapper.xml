@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.board.mapper.MasterMapper">
+
+<!-- 유저 게시물/댓글 resultMap 정의 -->
+<resultMap id="CountResultMap_board" type="HashMap">
+    <id property="userid" column="userid" />
+    <result property="username" column="username" />
+    <result property="boardcount" column="board_count" />
+</resultMap>
+
+<!-- 유저마다 게시한 게시물 갯수 -->
+<select id="boardCountGroupbyUserid" resultMap="CountResultMap_board">
+	select m.userid, m.username, count(b.seqno) as board_count
+	from tbl_member m left join tbl_board b ON m.userid = b.userid 
+	group by m.userid, m.username order by board_count DESC
+</select>
+
+<!-- 유저 게시물/댓글 resultMap 정의 -->
+<resultMap id="CountResultMap_reply" type="HashMap">
+    <id property="userid" column="userid" />
+    <result property="username" column="username" />
+    <result property="replycount" column="reply_count" />
+</resultMap>
+
+<select id="replyCountGroupbyUserid" resultMap="CountResultMap_reply">
+<!-- 유저마다 게시한 댓글 갯수 -->
+select m.userid, m.username, count(r.replyseqno) as reply_count
+	from tbl_member m left join tbl_reply r ON m.userid = r.userid 
+	group by m.userid, m.username order by reply_count DESC
+</select>
+
+<select id="memberCount" resultType="string">
+select count(*) from tbl_member
+</select>
+
+<!-- 유저 게시물/댓글 resultMap 정의 -->
+<resultMap id="fileListMap" type="HashMap">
+    <id property="fileseqno" column="fileseqno" />
+    <result property="userid" column="userid" />
+    <result property="org_filename" column="org_filename" />
+    <result property="stored_filename" column="stored_filename" />
+</resultMap>
+
+<select id="fileList" resultMap="fileListMap">
+	select fileseqno, org_filename, stored_filename, userid from tbl_file where checkfile='O' order by fileseqno asc 
+</select>
+
+<select id="fileDeleteList" resultMap="fileListMap">
+	select fileseqno, org_filename, stored_filename, userid from tbl_file where checkfile='X' order by fileseqno asc 
+</select>
+
+<delete id="fileDelete" parameterType="int">
+	delete from tbl_file where fileseqno=#{fileseqno}
+</delete>
+
+<!-- 유저 게시물/댓글 resultMap 정의 -->
+<resultMap id="jobgenderMap" type="HashMap">
+    <id property="c_m" column="c_m" />
+    <result property="s_m" column="s_m" />
+    <result property="g_m" column="g_m" />
+    <result property="c_fm" column="c_fm" />
+    <result property="s_fm" column="s_fm" />
+    <result property="g_fm" column="g_fm" />
+</resultMap>
+
+<select id="countJobGenderMap" resultMap="jobgenderMap">
+select
+    sum(case when job = '회사원' and gender = '남성' then 1 else 0 end) as c_m,
+    sum(case when job = '자영업' and gender = '남성' then 1 else 0 end) as s_m,
+    sum(case when job = '공무원' and gender = '남성' then 1 else 0 end) as g_m,
+    sum(case when job = '회사원' and gender = '여성' then 1 else 0 end) as c_fm,
+    sum(case when job = '자영업' and gender = '여성' then 1 else 0 end) as s_fm,
+    sum(case when job = '공무원' and gender = '여성' then 1 else 0 end) as g_fm
+from tbl_member
+</select>
+
+</mapper>

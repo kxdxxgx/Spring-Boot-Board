@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원 수</title>
+<link href="/css/style.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+        }
+
+        table {
+            width: 90%;
+            margin: 50px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 28px;
+            margin-top: 100px;
+        }
+
+        th, td {
+            border: 1px solid #eee;
+            padding: 16px;
+            text-align: center;
+        }
+
+        th {
+            background-color: aliceblue;
+        }
+    </style>
+</head>
+<body>
+	<div class="menubar">
+		<ul class="main_menu">
+			<li><a href="/board/list?page=1">홈으로</a></li>
+			<li><a href="">사용자통계</a>
+				<ul class="sub_menu">
+					<li><a href="/master/memberCount">전체 회원 숫자</a></li>
+					<li><a href="/master/numberPost">게시물 갯수</a></li>
+					<li><a href="/master/numberReply">댓글 갯수</a></li>
+				</ul>
+			</li>
+			<li><a href="">첨부파일</a>
+				<ul class="sub_menu">
+					<li><a href="/master/fileModify">첨부 파일 수정</a></li>
+					<li><a href="/master/fileDelete">첨부 파일 삭제</a></li>
+				</ul>
+			</li>
+			<li><a href="/master/boardManage">게시판관리</a></li>
+			<li><a href="/master/systemInfo">시스템정보</a></li>
+		</ul>
+	</div>
+<table>
+    <thead>
+        <tr>
+            <th></th>
+            <th>회사원</th>
+            <th>자영업</th>
+            <th>공무원</th>
+            <th>총합</th>
+        </tr>
+    </thead>
+    <tbody th:each="count : ${memberCount}">
+		<!-- 남자 -->
+		<tr>
+		    <td>남자</td>
+		    <td th:text="|${count.c_m}명|"></td>
+		    <td th:text="|${count.s_m}명|"></td>
+		    <td th:text="|${count.g_m}명|"></td>
+		    <td th:text="|${count.c_m + count.s_m + count.g_m}명|"></td>
+		</tr>
+		<!-- 여자 -->
+		<tr>
+		    <td>여자</td>
+		    <td th:text="|${count.c_fm}명|"></td>
+		    <td th:text="|${count.s_fm}명|"></td>
+		    <td th:text="|${count.g_fm}명|"></td>
+		    <td th:text="|${count.c_fm + count.s_fm + count.g_fm}명|"></td>
+		</tr>
+		<!-- 총합 -->
+		<tr>
+		    <td>총합</td>
+		    <td th:text="|${count.c_m + count.c_fm}명|"></td>
+		    <td th:text="|${count.s_m + count.s_fm}명|"></td>
+		    <td th:text="|${count.g_m + count.g_fm}명|"></td>
+		    <td th:text="|${count.c_m + count.c_fm + count.s_m + count.s_fm + count.g_m + count.g_fm}명|"></td>
+		</tr>
+    </tbody>
+</table>
+</table>
+    </table>
+</body>
+</html>

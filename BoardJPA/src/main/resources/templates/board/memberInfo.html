@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+ <link href="/css/style.css" rel="stylesheet">
+<title>Insert title here</title>
+<style>
+	.field {
+         width: 90%;
+         border:none;
+         border-bottom: 2px solid gray;
+         padding:10px;
+         outline : none;
+         color: #636e72;
+         height: 25px;
+         background: none;
+     }
+	.input_content{
+	  width: 90%;
+	  height: 300px;
+	  padding: 10px;
+	  box-sizing: border-box;
+	  border: solid #adadad;
+	  font-size: 16px;
+	  resize: both;
+	
+	}
+</style>
+ <link href="/css/style.css" rel="stylesheet">
+ <script src="/js/getCookie.js"></script>
+</head>
+
+<script>
+	const logout = () => {
+		if(confirm('로그아웃하시겠습니까?')) {
+			let authkey = getCookie('authkey');
+			if(authkey != undefined)
+				document.cookie = 'authkey=' + authkey + '; path=/; max-age=0'
+				
+			document.location.href='/member/logout';
+		}
+	}
+</script>
+
+<body>
+
+
+	<div class="boardView">
+		<div style="width:70%; height:auto; margin:auto; padding:20px; border:none;">
+			<img th:src="@{'/profile/' + ${memberInfo.stored_filename}}" style="display:block; width:80%; height:auto; margin:auto;" >
+		</div>
+		<div class="items" th:text="|아이디 : ${memberInfo.email}|"></div>
+		<div class="items" th:text="|이름 : ${memberInfo.username}|"></div>
+		<div class="items" th:text="|직업 : ${memberInfo.job}|"></div>
+		<div class="items" th:text="|성별 : ${memberInfo.gender}|"></div>
+		<div class="items" th:text="|취미 : ${memberInfo.hobby}|"></div>
+		<div class="items" th:text="|전화번호 : ${memberInfo.telno}|"></div>
+		<div class="items" th:text="|별명 : ${memberInfo.nickname}|"></div>
+		<div class="items" th:text="|가입일자 : ${memberInfo.regdate}|"></div>
+		<div class="items" th:text="|최종 로그인 날짜 : ${memberInfo.lastlogindate}|"></div>
+		<div class="items" th:text="|최종 로그아웃 날짜 : ${memberInfo.lastlogoutdate}|"></div>
+		<div class="items" th:text="|최종 패스워드 변경일 : ${memberInfo.lastpwdate}|"></div>
+		
+		<th:block th:if="${memberInfo.role == 'USER'}">
+			<div class="items">회원 권한 : 일반 권한</div>
+		</th:block>
+		<th:block th:if="${memberInfo.role == 'MASTER'}">
+			<div class="items">회원 권한 : 관리자</div>
+		</th:block>
+		<div class="input_content"><pre th:text="|내용 : ${memberInfo.description}|"></pre></div>
+    </div>
+    <div class="bottom_menu">
+       <a href="/board/list?page=1">처음으로</a>&nbsp;&nbsp;
+       <a href="/board/memberInfoModify">사용 정보 변경</a>&nbsp;&nbsp;
+       <a href="/member/memberPasswordModify">비밀번호 변경</a>&nbsp;&nbsp;
+       <a href="javascript:logout()">로그아웃</a>&nbsp;&nbsp;
+   </div>
+</body>
+</html>

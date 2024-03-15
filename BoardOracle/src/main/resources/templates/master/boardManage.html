@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>게시판 관리</title>
+<link href="/css/style.css" rel="stylesheet">
+<style>
+	.postNum {
+	  padding: 10px;
+	  border: 1px solid #ccc;
+	  border-radius: 5px;
+	  font-size: 14px;
+	}
+	
+	.postNum::placeholder {
+	  color: #999;
+	}
+	
+	#submitButton {
+	  margin-left: 10px;
+	  background-color: #4CAF50;
+	  color: white;
+	  padding: 10px 20px;
+	  border: none;
+	  cursor: pointer;
+	}
+	
+	#submitButton:hover {
+	  background-color: #45a049;
+	}
+	
+	.container {
+	  display: flex;
+	  justify-content: center;
+	  align-items: center;
+	  height: 100vh;
+	}
+
+</style>
+</head>
+<body>
+	
+	<form id="boardManage" class="container">
+	  <input type="text" name="postNum" class="postNum" id="postNum" placeholder="한 화면에 보여지는 게시물 행 갯수(1~10)를 조절하세요" />
+	  <button type="button" id="submitButton" onclick="submit1()">전송</button>
+	</form>
+	<div class="menubar">
+		<ul class="main_menu">
+			<li><a href="/board/list?page=1">홈으로</a></li>
+			<li><a href="">사용자통계</a>
+				<ul class="sub_menu">
+					<li><a href="/master/memberCount">전체 회원 숫자</a></li>
+					<li><a href="/master/numberPost">게시물 갯수</a></li>
+					<li><a href="/master/numberReply">댓글 갯수</a></li>
+				</ul>
+			</li>
+			<li><a href="">첨부파일</a>
+				<ul class="sub_menu">
+					<li><a href="/master/fileModify">첨부 파일 수정</a></li>
+					<li><a href="/master/fileDelete">첨부 파일 삭제</a></li>
+				</ul>
+			</li>
+			<li><a href="/master/boardManage">게시판관리</a></li>
+			<li><a href="/master/systemInfo">시스템정보</a></li>
+		</ul>
+	</div>
+</body>
+
+<script>
+	const submit1 = async () => {
+		
+		
+		const queryString = {
+			size: postNum.value
+		};
+		
+		alert(postNum.value);
+		
+	  await fetch('/master/boardManage', {
+			method: 'POST',
+			headers: {
+				"content-type":"application/json"
+			},
+			body: JSON.stringify(queryString)
+		}).then((response) => response.json())
+			.then((data) => {
+				console.log('전송 성공');
+			}).catch((error) => {
+				console.log("error : " + error);
+			})
+		}
+</script>
+</html>

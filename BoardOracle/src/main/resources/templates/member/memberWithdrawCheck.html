@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>회원 탈퇴 확인</title>
+<script src="/js/getCookie.js"></script>
+</head>
+<body>
+	<div id="main">
+		<div id="LogoutView">
+			<form id="IdCheck" class="IdCheck" name="IdCheck">
+				<h1 class="title">회원 탈퇴하시려면 로그인 아이디를 입력해 주세요 </h1>
+				<input type="text" class="input_field" id="userid" name="userid" placeholder="여기에 아이디를 입력해 주세요.">
+	            <input type="button" class="btn_write" value="탈퇴" onclick="IdCheckfunction()">
+	            <a href="/member/memberInfo"><button class="btn_cancel" value="취소">취소</button></a>
+			</form>
+		</div>
+	</div>
+</body>
+
+<script>
+	const IdCheckfunction = async () => {
+		if(userid.value == '') {
+			alert('아이디를 입력하세요');
+			userid.focus();
+			return false;
+		}
+		
+		let formData = new FormData(IdCheck);
+		
+		await fetch('/member/memberWithdrawCheck', {
+			method: 'POST',
+			body: formData
+		}).then((response) => response.json())
+			.then((data) => {
+				if(data.message == 'GOOD') {
+					console.log(data.message)
+					logout();
+					document.location.href="/member/memberWithdraw";
+				}else {
+					alert("해당 조건에 맞는 아이디가 존재하지 않습니다.");
+				}
+			}).catch((error) => {
+				console.log("error = " + error);
+				alert("에러가 발생하였습니다.");
+			})
+	}
+	
+	const logout = () => {
+		let authkey = getCookie('authkey');
+		let userid = getCookie('userid');
+		let password = getCookie('password');
+		if(authkey != undefined)
+			document.cookie = 'authkey=' + authkey + ";path=/;max-age=0";
+		if(userid != undefined)
+			document.cookie = 'userid=' + authkey + ";path=/;max-age=0";
+		if(password != undefined)
+			document.cookie = 'password=' + authkey + ";path=/;max-age=0";
+			
+		document.location.href = '/member/memberSessionOut'
+	}
+</script>
+</html>

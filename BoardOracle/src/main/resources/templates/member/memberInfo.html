@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+ <link href="/css/style.css" rel="stylesheet">
+<title>Insert title here</title>
+<style>
+	.input_content{
+	  width: 90%;
+	  height: 300px;
+	  padding: 10px;
+	  box-sizing: border-box;
+	  border: solid #adadad;
+	  font-size: 16px;
+	  resize: both;
+	}
+	.bottom_menu {
+		display: flex;
+    	justify-content: center;
+	}
+</style>
+ <link href="/css/style.css" rel="stylesheet">
+ <script src="/js/getCookie.js"></script>
+</head>
+
+<script>
+	const logout = () => {
+		if(confirm('로그아웃하시겠습니까?')) {
+			let authkey = getCookie('authkey');
+			if(authkey != undefined)
+				document.cookie = 'authkey=' + authkey + '; path=/; max-age=0'
+				
+			document.location.href='/member/logout';
+		}
+	}
+</script>
+
+<body>
+	<script>
+		const userid = '[[${session.userid}]]';
+		if(userid=='') {
+			document.location.href='/';
+		}
+	</script>
+
+
+	<div class="boardView">
+		<h1 class="title">사용자 관리</h1>
+		<div style="width:70%; height:auto; margin:auto; padding:20px; border:none;">
+			<img th:src="@{'/profile/' + ${memberInfo.stored_filename}}" style="display:block; width:80%; height:auto; margin:auto;" >
+		</div>
+		<div class="field" th:text="|아이디 : ${memberInfo.userid}|"></div>
+		<div class="field" th:text="|이름 : ${memberInfo.username}|"></div>
+		<div class="field" th:text="|직업 : ${memberInfo.job}|"></div>
+		<div class="field" th:text="|성별 : ${memberInfo.gender}|"></div>
+		<div class="field" th:text="|취미 : ${memberInfo.hobby}|"></div>
+		<div class="field" th:text="|전화번호 : ${memberInfo.telno}|"></div>
+		<div class="field" th:text="|이메일 : ${memberInfo.email}|"></div>
+		<div class="field" th:text="|가입일자 : ${memberInfo.regdate}|"></div>
+		<div class="field" th:text="|최종 로그인 날짜 : ${memberInfo.lastlogindate}|"></div>
+		<div class="field" th:text="|최종 로그아웃 날짜 : ${memberInfo.lastlogoutdate}|"></div>
+		<div class="field" th:text="|최종 패스워드 변경일 : ${memberInfo.lastpwdate}|"></div>
+		
+		<th:block th:if="${memberInfo.role == 'USER'}">
+			<div class="field">회원 권한 : 일반 권한</div>
+		</th:block>
+		<th:block th:if="${memberInfo.role == 'MASTER'}">
+			<div class="field">회원 권한 : 관리자</div>
+		</th:block>
+		<div class="input_content"><pre th:text="|내용 : ${memberInfo.description}|"></pre></div>
+    </div>
+    <div class="bottom_menu">
+       <a href="/board/list?page=1">처음으로</a>&nbsp;&nbsp;
+       <a href="/member/memberInfoModify">사용 정보 변경</a>&nbsp;&nbsp;
+       <a href="/member/memberPasswordModify">비밀번호 변경</a>&nbsp;&nbsp;
+       <a href="/member/memberWithdrawCheck">회원 탈퇴</a>&nbsp;&nbsp;
+       <a href="javascript:logout()">로그아웃</a>&nbsp;&nbsp;
+   </div>
+</body>
+</html>
